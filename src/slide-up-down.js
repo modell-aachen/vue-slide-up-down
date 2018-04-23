@@ -27,13 +27,12 @@ export default {
   },
 
   mounted () {
-    this.layout()
-
     window.addEventListener('resize', this.layout)
 
-    setTimeout(() => {
+    Vue.nextTick(() => {
       this.isMounted = true
-    }, 0)
+      this.layout();
+    })
   },
 
   destroyed () {
