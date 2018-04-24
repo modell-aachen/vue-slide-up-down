@@ -2,7 +2,10 @@ export default {
   name: 'SlideUpDown',
 
   props: {
-    active: Boolean,
+    active: {
+      type: Boolean,
+      default:  true
+    },
     duration: {
       type: Number,
       default: 500
@@ -31,7 +34,7 @@ export default {
   },
 
   mounted () {
-    this.observer.observe( this.$el, { attributes: false, childList: true } );
+    this.observer.observe( this.$el, { subtree: true, childList: true } );
     window.addEventListener('resize', this.layout);
     Vue.nextTick(() => {
       this.isMounted = true
@@ -64,6 +67,7 @@ export default {
 
   methods: {
     layout () {
+      console.log( "new layout .." );
       const { container } = this.$refs
 
       if (this.active) {
