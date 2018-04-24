@@ -31,7 +31,7 @@ export default {
   },
 
   mounted () {
-    this.observer.observe( vm.$el, { attributes: false, childList: true } );
+    this.observer.observe( this.$el, { attributes: false, childList: true } );
     window.addEventListener('resize', this.layout);
     Vue.nextTick(() => {
       this.isMounted = true
