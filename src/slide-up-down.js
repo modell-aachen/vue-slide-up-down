@@ -67,7 +67,6 @@ export default {
 
   methods: {
     layout () {
-      console.log( "new layout .." );
       const { container } = this.$refs
 
       if (this.active) {
