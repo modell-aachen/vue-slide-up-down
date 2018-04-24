@@ -26,9 +26,13 @@ export default {
     )
   },
 
-  mounted () {
-    window.addEventListener('resize', this.layout)
+  created() {
+    this.observer = new MutationObserver(this.layout);
+  },
 
+  mounted () {
+    this.observer.observe( vm.$el, { attributes: false, childList: true } );
+    window.addEventListener('resize', this.layout);
     Vue.nextTick(() => {
       this.isMounted = true
       this.layout();
@@ -36,7 +40,9 @@ export default {
   },
 
   destroyed () {
-    window.removeEventListener('resize', this.layout)
+    this.observer.disconnect();
+    delete( this.observer );
+    window.removeEventListener('resize', this.layout);
   },
 
   watch: {
