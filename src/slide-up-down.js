@@ -14,6 +14,7 @@ export default {
 
   data: () => ({
     maxHeight: 0,
+    overflow: 'inherit',
     offsetHeight: 0,
     isMounted: false
   }),
@@ -57,7 +58,7 @@ export default {
   computed: {
     style () {
       return {
-        overflow: 'hidden',
+        overflow: this.overflow,
         'transition-property': 'height',
         height: this.isMounted ? this.maxHeight + 'px' : 'auto',
         'transition-duration': this.duration + 'ms'
@@ -70,6 +71,7 @@ export default {
       const { container } = this.$refs
 
       if (this.active) {
+        this.overflow = 'inherit';
         const style = container.getAttribute('style')
         container.removeAttribute('style')
         this.maxHeight = container.offsetHeight
@@ -78,6 +80,7 @@ export default {
         // call this explicitely to force a new layout
         this.offsetHeight = container.offsetHeight
       } else {
+        this.overflow = 'hidden';
         this.maxHeight = 0
       }
     }
