@@ -29,23 +29,11 @@ export default {
     )
   },
 
-  created() {
-    this.observer = new MutationObserver(this.layout);
-  },
-
   mounted () {
-    this.observer.observe( this.$el, { subtree: true, childList: true } );
-    window.addEventListener('resize', this.layout);
     Vue.nextTick(() => {
       this.isMounted = true
       this.layout();
     })
-  },
-
-  destroyed () {
-    this.observer.disconnect();
-    delete( this.observer );
-    window.removeEventListener('resize', this.layout);
   },
 
   watch: {
@@ -72,16 +60,26 @@ export default {
         container.removeAttribute('style')
         this.maxHeight = container.offsetHeight
         container.setAttribute('style', style)
-
+        let self = this;
+        requestAnimationFrame(function() {
+            container.style.height = self.maxHeight + 'px';
+        });
         setTimeout(function(){
-          container.style.overflow = 'initial'
+          container.style.overflow = 'initial';
+          container.style.height = 'auto';
         }, this.duration)
 
         // call this explicitely to force a new layout
         this.offsetHeight = container.offsetHeight
       } else {
-        container.style.overflow = 'hidden'
-        this.maxHeight = 0
+        let self = this;
+        requestAnimationFrame(function() {
+            container.style.height = self.maxHeight + 'px';
+            requestAnimationFrame(function() {
+                container.style.overflow = 'hidden'
+                container.style.height = 0 + 'px';
+            });
+        });
       }
     }
   }
