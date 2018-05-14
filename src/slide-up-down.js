@@ -15,7 +15,8 @@ export default {
   data: () => ({
     maxHeight: 0,
     offsetHeight: 0,
-    isMounted: false
+    isMounted: false,
+    initialStateReached: false
   }),
 
   render (h) {
@@ -46,7 +47,7 @@ export default {
     style () {
       return {
         'transition': 'height '+this.duration + 'ms',
-        height: this.isMounted ? this.maxHeight + 'px' : 'auto'
+        'height': this.isMounted ? this.maxHeight : '0'
       }
     }
   },
@@ -54,32 +55,30 @@ export default {
   methods: {
     layout () {
       const { container } = this.$refs
-
       if (this.active) {
         const style = container.getAttribute('style')
         container.removeAttribute('style')
-        this.maxHeight = container.offsetHeight
+        this.offsetHeight = container.offsetHeight
         container.setAttribute('style', style)
         let self = this;
         requestAnimationFrame(function() {
-            container.style.height = self.maxHeight + 'px';
+          self.maxHeight = self.offsetHeight + 'px';
         });
         setTimeout(function(){
           container.style.overflow = 'initial';
-          container.style.height = 'auto';
+          self.maxHeight = 'auto';
         }, this.duration)
 
-        // call this explicitely to force a new layout
-        this.offsetHeight = container.offsetHeight
+        this.initialStateReached = true;
       } else {
-        let self = this;
-        requestAnimationFrame(function() {
-            container.style.height = self.maxHeight + 'px';
-            requestAnimationFrame(function() {
-                container.style.overflow = 'hidden'
-                container.style.height = 0 + 'px';
-            });
-        });
+        container.style.overflow = 'hidden';
+        if( this.initialStateReached ) {
+          container.style.height = this.offsetHeight + 'px';
+          let self = this;
+          requestAnimationFrame(function() {
+            self.maxHeight = '0';
+          });
+        }
       }
     }
   }
