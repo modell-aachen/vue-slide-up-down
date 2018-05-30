@@ -65,7 +65,7 @@ export default {
           self.maxHeight = self.offsetHeight + 'px';
         });
         setTimeout(function(){
-          container.style.overflow = 'initial';
+          container.style.overflow = 'visible';
           self.maxHeight = 'auto';
         }, this.duration)
 
